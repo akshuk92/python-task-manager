@@ -1,0 +1,53 @@
+# k8s/deployment.yaml
+#
+# WHY: A Deployment tells Kubernetes: "keep N replicas of this pod
+# running at all times." If a pod crashes, Kubernetes automatically
+# restarts it. If a node dies, Kubernetes reschedules pods elsewhere.
+# This is the core of "self-healing infrastructure."
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-manager
+  namespace: task-manager
+  labels:
+    app: task-manager
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: task-manager
+  template:
+    metadata:
+      labels:
+        app: task-manager
+    spec:
+      containers:
+        - name: task-manager
+          image: IMAGE_PLACEHOLDER   # Jenkins replaces this at deploy time
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: task-manager-config
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          # Liveness probe: "Is the app alive? If not, RESTART the pod."
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          # Readiness probe: "Is the app ready for traffic? If not,
+          # stop sending it requests (but don't restart it)."
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5

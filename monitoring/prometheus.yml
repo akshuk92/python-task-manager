@@ -1,0 +1,20 @@
+# monitoring/prometheus.yml
+#
+# WHY: Prometheus periodically "scrapes" (polls) metrics endpoints.
+# Here we point it at Nginx and give a placeholder job for the app.
+# In a full setup, we'd add the 'prometheus-flask-exporter' library
+# to app.py to expose a /metrics endpoint with request counts, latency,
+# and error rates — the standard "RED metrics" (Rate, Errors, Duration).
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "task-manager-app"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["app:5000"]
+
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]

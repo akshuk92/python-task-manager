@@ -1,0 +1,8 @@
+# k8s/namespace.yaml
+#
+# WHY: Namespaces isolate resources within a cluster — like separate
+# "folders" for dev, staging, and production, or per-team isolation.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: task-manager

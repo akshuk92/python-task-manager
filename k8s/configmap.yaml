@@ -1,0 +1,14 @@
+# k8s/configmap.yaml
+#
+# WHY: ConfigMaps inject environment-specific configuration into pods
+# WITHOUT rebuilding the Docker image. Change a value here, redeploy,
+# done — no code change needed.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: task-manager-config
+  namespace: task-manager
+data:
+  APP_ENV: "production"
+  LOG_LEVEL: "INFO"
+  DB_PATH: "/data/tasks.db"

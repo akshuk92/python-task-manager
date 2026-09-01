@@ -1,0 +1,26 @@
+# k8s/ingress.yaml
+#
+# WHY: Ingress routes external HTTP traffic (from the internet) into
+# the cluster and to the correct Service, based on hostname/path.
+# It's the Kubernetes equivalent of an Nginx reverse proxy config,
+# but cluster-native and managed by an Ingress Controller (e.g., nginx-ingress).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: task-manager-ingress
+  namespace: task-manager
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: task-manager.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: task-manager-service
+                port:
+                  number: 80

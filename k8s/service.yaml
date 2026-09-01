@@ -1,0 +1,18 @@
+# k8s/service.yaml
+#
+# WHY: Pods are ephemeral — they get new IPs every time they restart.
+# A Service gives a STABLE internal DNS name/IP that automatically
+# load-balances across all healthy pods matching the selector.
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-manager-service
+  namespace: task-manager
+spec:
+  selector:
+    app: task-manager
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: ClusterIP

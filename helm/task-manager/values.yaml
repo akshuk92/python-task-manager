@@ -1,0 +1,34 @@
+# values.yaml
+#
+# WHY: This is the single file you change to deploy to a different
+# environment. `helm install -f values-prod.yaml` overrides these
+# defaults without touching any template file.
+
+replicaCount: 3
+
+image:
+  repository: your-nexus-registry.company.com:5000/task-manager
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5000
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+env:
+  APP_ENV: production
+  LOG_LEVEL: INFO
+  DB_PATH: /data/tasks.db
+
+ingress:
+  enabled: true
+  host: task-manager.example.com
